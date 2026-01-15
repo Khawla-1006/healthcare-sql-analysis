@@ -3,6 +3,8 @@ USE healthcare_db;
 SELECT * FROM patients;
 SELECT * FROM lab_tests;
 
+
+
 -- GET PATIENTS WITH DIAGNOSIS 'DIABETES'
 SELECT first_name, last_name, age 
 FROM patients
@@ -60,3 +62,37 @@ WHERE status = 'Pending';
 SELECT COUNT(*) AS completed_tests
 FROM lab_tests
 WHERE status = 'Completed';
+
+-- JOIN TO GET TEST NAMES ALONG WITH PATIENT NAMES (PRACTICE ALIASING)
+SELECT lab.test_name, p.first_name, p.last_name
+FROM lab_tests AS lab, patients AS p
+WHERE lab.patient_id = p.patient_id;
+
+
+-- JOIN TO GET TEST NAMES ALONG WITH PATIENT NAMES (PRACTICE INNER JOIN)
+SELECT lab.test_name, p.first_name, p.last_name
+FROM lab_tests AS lab
+INNER JOIN patients AS p 
+ON lab.patient_id = p.patient_id;
+
+-- JOIN TO GET PATIENTS AND THEIR LAB TESTS (LEFT JOIN)
+SELECT p.first_name, p.last_name, lab.test_name, lab.result_value
+FROM patients AS p
+LEFT JOIN lab_tests AS lab
+ON p.patient_id = lab.patient_id;
+
+
+-- LIST OF PATIENTS ORDERED BY GLUCOSE LEVELS DESCENDING
+SELECT p.first_name, p.last_name, lab.result_value
+FROM patients AS p
+LEFT JOIN lab_tests AS lab
+ON p.patient_id = lab.patient_id
+WHERE lab.test_code = 'GLU_F'
+ORDER BY lab.result_value DESC;
+
+-- LIST OF DIAGNOSES WITH THEIR CORRESPONDING LAB TEST NAMES
+SELECT p.diagnosis, lab.test_name
+FROM patients AS p
+INNER JOIN lab_tests AS lab
+ON p.patient_id = lab.patient_id
+ORDER BY lab.test_name;
